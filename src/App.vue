@@ -1,7 +1,8 @@
 <script setup>
-import HelloWorld from './components/HelloWorld.vue'
+// App.vue is now just the master layout container.
+// The router will swap out views dynamically inside <router-view />.
 </script>
 
 <template>
-  <HelloWorld />
+  <router-view />
 </template>

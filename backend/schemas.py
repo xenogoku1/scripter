@@ -1,7 +1,7 @@
 from pydantic import BaseModel, EmailStr, Field
 from typing import Optional
 
-# --- AUTHENTICATION SCHEMAS ---
+# --- AUTHENTICATION ---
 
 class UserRegister(BaseModel):
     email: EmailStr
@@ -13,7 +13,7 @@ class UserLogin(BaseModel):
     password: str
 
 
-# --- SCRIPT SCHEMAS ---
+# --- SCRIPT STUFF ---
 
 class ScriptCreate(BaseModel):
     title: str = Field(..., min_length=1, max_length=150)
@@ -26,7 +26,7 @@ class ScriptUpdate(BaseModel):
     anime_title: Optional[str] = None
 
 
-# --- TRANSCRIPTION / VOICE NOTES SCHEMAS ---
+# --- TRANSCRIPT / VOICE NOTES SCHEMAS ---
 
 class AudioNoteCreate(BaseModel):
     script_id: Optional[str] = None  # Link to a script if applicable

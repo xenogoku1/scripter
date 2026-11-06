@@ -1,17 +1,62 @@
 <script setup>
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import AuthInput from '@/components/AuthInput.vue'
+import api from '../services/api'
+
+const router = useRouter()
 
 // Form state variables
 const email = ref('')
 const password = ref('')
+const errorMessage = ref('')
+const isLoading = ref(false)
 
-const handleLogin = () => {
-  console.log("Logging in user:", { email: email.value })
+const handleLogin = async () => {
+  errorMessage.value = ''
+  isLoading.value = true
+
+  try {
+    const response = await api.login({
+      email: email.value,
+      password: password.value,
+    })
+
+    console.log("Login successful:", response.data)
+
+    // Store the access token in localStorage (or sessionStorage)
+    if (response.data.access_token) {
+      localStorage.setItem('access_token', response.data.access_token)
+    }
+
+    // Redirect user to the dashboard or home view (update route as needed)
+    router.push('/')
+  } catch (error) {
+    console.error("Login error:", error)
+    
+    // Human-friendly error parsing
+    const detail = error.response?.data?.detail
+    if (typeof detail === 'string') {
+      errorMessage.value = detail
+    } else {
+      errorMessage.value = "Invalid email or password. Please try again."
+    }
+  } finally {
+    isLoading.value = false
+  }
 }
 
-const handleGoogleLogin = () => {
-  console.log("Google Sign-in clicked")
+const handleGoogleLogin = async () => {
+  try {
+    const response = await api.getGoogleAuthUrl()
+    if (response.data.url) {
+      // Redirect browser to Google's login page
+      window.location.href = response.data.url
+    }
+  } catch (error) {
+    console.error("Google auth error:", error)
+    errorMessage.value = "Could not connect to Google sign-in. Try again."
+  }
 }
 </script>
 
@@ -27,21 +72,27 @@ const handleGoogleLogin = () => {
       <div class="absolute -top-24 -right-24 w-48 h-48 bg-[#00bbff]/10 rounded-full blur-3xl pointer-events-none"></div>
 
       <!-- Header Section -->
-      <div class="text-center mb-8">
-        <h1 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight mb-2">Welcome Back </h1>
+      <div class="text-center mb-6">
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight mb-2">Welcome Back</h1>
         <p class="text-xs sm:text-sm text-gray-400">Log in to access your saved YouTube scripts.</p>
       </div>
 
-      <!-- Form Fields (Using our reusable AuthInput component) -->
+      <!-- Error Message Display (Neatly trapped inside the card) -->
+      <div v-if="errorMessage"
+        class="mb-6 p-3 bg-red-500/10 border border-red-500/30 rounded-xl text-red-400 text-xs sm:text-sm text-center">
+        {{ errorMessage }}
+      </div>
+
+      <!-- Form Fields -->
       <form @submit.prevent="handleLogin" class="space-y-4 sm:space-y-5">
         <AuthInput label="Email Address" type="email" placeholder="name@example.com" v-model="email" />
 
         <AuthInput label="Password" type="password" placeholder="Enter your password" v-model="password" />
 
         <!-- Login Button -->
-        <button type="submit"
-          class="w-full mt-2 py-3.5 px-4 bg-neonLime text-black font-bold rounded-xl text-sm sm:text-base hover:opacity-90 shadow-[0_0_20px_rgba(140,255,0,0.3)] transition-all cursor-pointer">
-          Sign In
+        <button type="submit" :disabled="isLoading"
+          class="w-full mt-2 py-3.5 px-4 bg-neonLime text-black font-bold rounded-xl text-sm sm:text-base hover:opacity-90 shadow-[0_0_20px_rgba(140,255,0,0.3)] transition-all cursor-pointer disabled:opacity-50">
+          {{ isLoading ? 'Signing In...' : 'Sign In' }}
         </button>
       </form>
 

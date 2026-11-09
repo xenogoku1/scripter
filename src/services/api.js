@@ -1,7 +1,8 @@
 import axios from 'axios'
 
 // Grabs the URL from the environment file, defaults to localhost if not found
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 
+  (import.meta.env.DEV ? 'http://localhost:8000' : 'https://scripter-4hha.onrender.com');
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,

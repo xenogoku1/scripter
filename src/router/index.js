@@ -12,6 +12,11 @@ const routes = [
   { path: '/login', name: 'login', component: LoginView },
   { path: '/register', name: 'register', component: RegisterView },
   { path: '/dashboard', name: 'dashboard', component: DashboardView },
+  {
+    path: '/reset-password',
+    name: 'reset-password',
+    component: () => import('../views/ResetPasswordView.vue'),
+  },
 ]
 
 const router = createRouter({

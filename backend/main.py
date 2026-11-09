@@ -2,13 +2,18 @@ from fastapi import FastAPI, APIRouter, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from database import supabase
 from schemas import UserRegister, UserLogin, ScriptCreate, AudioNoteCreate
+import os
 
 app = FastAPI(title="TalkScript API", version="1.0.0")
+#pulling the frontend URL from env 
+FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:5173")
 
 # Enable CORS so your Vue 3 frontend can communicate with this backend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],  
+    allow_origins=["http://localhost:5173",
+                    FRONTEND_URL
+                    ],  
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -95,9 +100,33 @@ def google_auth():
         response = supabase.auth.sign_in_with_oauth({
             "provider": "google",
             "options": {
-                "redirect_to": "http://localhost:5173/" # Frontend callback/home URL
+                "redirect_to": f"{FRONTEND_URL}/" # Dynamically targets local or production
             }
         })
         return {"url": response.url}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
+
+@router.post("/forgot-password")
+def forgot_password(data: dict):
+
+    email = data.get("email")
+    if not email:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Email is required."
+        )
+    try:
+        # Ask Supabase to send the recovery email
+        response = supabase.auth.reset_password_for_email(
+            email,
+            options={
+                "redirect_to": f"{FRONTEND_URL}/reset-password" 
+            }
+        )
+        return {"message": "Password reset link sent successfully. Check your email."}
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(e)
+        )

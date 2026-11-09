@@ -33,7 +33,7 @@ const handleLogin = async () => {
     router.push('/')
   } catch (error) {
     console.error("Login error:", error)
-    
+
     // Human-friendly error parsing
     const detail = error.response?.data?.detail
     if (typeof detail === 'string') {
@@ -58,6 +58,28 @@ const handleGoogleLogin = async () => {
     errorMessage.value = "Could not connect to Google sign-in. Try again."
   }
 }
+
+const handleForgotPassword = async () => {
+  if (!email.value) {
+    errorMessage.value = "Please enter your email address above first."
+    return
+  }
+
+  try {
+    isLoading.value = true
+    errorMessage.value = ''
+
+    await api.forgotPassword(email.value)
+
+    // Show a success message temporarily in the error/message banner box
+    errorMessage.value = "Password reset link sent! Check your inbox."
+  } catch (error) {
+    errorMessage.value = error.response?.data?.detail || "Could not send reset email. Try again."
+    console.error("Forgot password error:", error)
+  } finally {
+    isLoading.value = false
+  }
+}
 </script>
 
 <template>
@@ -77,7 +99,7 @@ const handleGoogleLogin = async () => {
         <p class="text-xs sm:text-sm text-gray-400">Log in to access your saved YouTube scripts.</p>
       </div>
 
-      <!-- Error Message Display (Neatly trapped inside the card) -->
+      <!-- Error Message Display-->
       <div v-if="errorMessage"
         class="mb-6 p-3 bg-red-500/10 border border-red-500/30 rounded-xl text-red-400 text-xs sm:text-sm text-center">
         {{ errorMessage }}
@@ -94,6 +116,14 @@ const handleGoogleLogin = async () => {
           class="w-full mt-2 py-3.5 px-4 bg-neonLime text-black font-bold rounded-xl text-sm sm:text-base hover:opacity-90 shadow-[0_0_20px_rgba(140,255,0,0.3)] transition-all cursor-pointer disabled:opacity-50">
           {{ isLoading ? 'Signing In...' : 'Sign In' }}
         </button>
+
+        <!-- forgot password -->
+        <div class="flex items-center justify-center gap-2 text-xs sm:text-sm mt-1 mb-4">
+          <span class="text-gray-400">Forgot your password?</span>
+          <button type="button" @click="handleForgotPassword" class="text-[#00bbff] hover:underline font-medium">
+            Reset it here
+          </button>
+        </div>
       </form>
 
       <!-- Divider -->

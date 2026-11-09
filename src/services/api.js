@@ -21,5 +21,9 @@ export default {
   getGoogleAuthUrl() {
     return apiClient.get('/auth/google')
   },
- 
+
+  forgotPassword(email) {
+    return apiClient.post('/auth/forgot-password', { email })
+  },
+
 }

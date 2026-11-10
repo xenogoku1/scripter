@@ -3,6 +3,7 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import AuthInput from '@/components/AuthInput.vue'
 import api from '../services/api'
+import { supabase } from '../services/supabase'
 
 const router = useRouter()
 
@@ -69,12 +70,15 @@ const handleForgotPassword = async () => {
     isLoading.value = true
     errorMessage.value = ''
 
-    await api.forgotPassword(email.value)
+    const { error } = await supabase.auth.resetPasswordForEmail(email.value, {
+      redirectTo: `${window.location.origin}/reset-password`,
+    })
 
-    // Show a success message temporarily in the error/message banner box
+    if (error) throw error
+
     errorMessage.value = "Password reset link sent! Check your inbox."
   } catch (error) {
-    errorMessage.value = error.response?.data?.detail || "Could not send reset email. Try again."
+    errorMessage.value = error.message || "Could not send reset email. Try again."
     console.error("Forgot password error:", error)
   } finally {
     isLoading.value = false

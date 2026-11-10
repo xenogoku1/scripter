@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
 import AuthInput from '../components/AuthInput.vue'
 import { supabase } from '../services/supabase'
@@ -10,7 +10,8 @@ const confirmPassword = ref('')
 const errorMessage = ref('')
 const successMessage = ref('')
 const isLoading = ref(false)
-
+const ready = ref(false)
+let sub
 const handleResetPassword = async () => {
   errorMessage.value = ''
   successMessage.value = ''
@@ -45,6 +46,22 @@ const handleResetPassword = async () => {
     isLoading.value = false
   }
 }
+
+onMounted(() => {
+  const hash = window.location.hash
+  if (hash.includes('error_description=')) {
+    const params = new URLSearchParams(hash.slice(1))
+    errorMessage.value = params.get('error_description') || 'Link is invalid or expired.'
+    return
+  }
+
+  const { data } = supabase.auth.onAuthStateChange((event) => {
+    if (event === 'PASSWORD_RECOVERY') ready.value = true
+  })
+  sub = data.subscription
+})
+
+onUnmounted(() => sub?.unsubscribe())
 </script>
 
 <template>

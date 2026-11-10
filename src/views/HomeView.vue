@@ -7,4 +7,6 @@
       <router-link to="/register" class="px-5 py-2.5 bg-white/10 text-white font-semibold rounded-xl hover:bg-white/20">Register</router-link>
     </div>
   </div>
+  
+   
 </template>

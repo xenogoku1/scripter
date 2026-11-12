@@ -1,17 +1,80 @@
 @import "tailwindcss";
 
+:root,
+[data-theme="default"] {
+  --bg-angle: 135deg; /* Sharp diagonal tech vibe */
+  --bg-start: #222629;
+  --bg-mid: #171A1C;
+  --bg-end: #0B0C0E;
+  --neon-lime: #8CFF00;
+  --app-blue: #00bbff;
+  --light-blue: #e0f6ff;
+}
+
+[data-theme="crimson"] {
+  --bg-angle: 160deg; /* Slight vertical drama like a theatre curtain */
+  --bg-start: #1f080c;
+  --bg-mid: #100407;
+  --bg-end: #02060E;
+  --neon-lime: #fed7b8;
+  --app-blue: #C50337;
+  --light-blue: #ffccd5;
+}
+
+[data-theme="midnight"] {
+  --bg-angle: 215deg; /* Deep cosmic downward flow */
+  --bg-start: #0b1329;
+  --bg-mid: #040817;
+  --bg-end: #000221;
+  --neon-lime: #00BBFF;
+  --app-blue: #0356C5;
+  --light-blue: #80d4ff;
+}
+
+[data-theme="slate"] {
+  --bg-angle: 180deg; /* Clean, architectural top-to-bottom */
+  --bg-start: #222222;
+  --bg-mid: #141414;
+  --bg-end: #080808;
+  --neon-lime: #ffffff;
+  --app-blue: #6b7280;
+  --light-blue: #d1d5db;
+}
+
+[data-theme="espresso"] {
+  --bg-angle: 135deg; /* Warm, rich diagonal warmth */
+  --bg-start: #2b1b0c;
+  --bg-mid: #1a1007;
+  --bg-end: #0d0804;
+  --neon-lime: #FFEB97;
+  --app-blue: #8c5821;
+  --light-blue: #fae1af;
+}
+
+[data-theme="emerald"] {
+  --bg-angle: 170deg; /* Grounded lush vertical gradient */
+  --bg-start: #11332c;
+  --bg-mid: #08211b;
+  --bg-end: #051410;
+  --neon-lime: #06D6A0;
+  --app-blue: #0C4137;
+  --light-blue: #E6FBF6;
+}
+
 @theme {
-  --color-darkBgStart: #222629;
-  --color-darkBgMid: #171A1C;
-  --color-darkBgEnd: #0B0C0E;
-  --color-neonLime: #8CFF00;
-  --color-appBlue: #00bbff;
-  --color-lightBlue: #e0f6ff;
+  --color-darkBgStart: var(--bg-start);
+  --color-darkBgMid: var(--bg-mid);
+  --color-darkBgEnd: var(--bg-end);
+  --color-neonLime: var(--neon-lime);
+  --color-appBlue: var(--app-blue);
+  --color-lightBlue: var(--light-blue);
 }
 
 body {
-  background: linear-gradient(135deg, #222629 0%, #171A1C 50%, #0B0C0E 100%);
+  /* It now dynamically reads the angle variable per theme! */
+  background: linear-gradient(var(--bg-angle), var(--bg-start) 0%, var(--bg-mid) 50%, var(--bg-end) 100%);
   min-height: 100vh;
-  color: #e0f6ff;
+  color: var(--light-blue);
   font-family: ui-sans-serif, system-ui, sans-serif;
+  transition: background 0.4s ease, color 0.4s ease;
 }

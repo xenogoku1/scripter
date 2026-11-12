@@ -31,7 +31,7 @@ const handleLogin = async () => {
     }
 
     // Redirect user to the dashboard or home view (update route as needed)
-    router.push('/')
+    router.push('/dashboard')
   } catch (error) {
     console.error("Login error:", error)
 

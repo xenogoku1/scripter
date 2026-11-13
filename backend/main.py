@@ -100,7 +100,7 @@ def google_auth():
         response = supabase.auth.sign_in_with_oauth({
             "provider": "google",
             "options": {
-                "redirect_to": f"{FRONTEND_URL}/" # Dynamically targets local or production
+                "redirect_to": f"{FRONTEND_URL}/dashboard" # Dynamically targets local or production
             }
         })
         return {"url": response.url}
@@ -130,3 +130,8 @@ def forgot_password(data: dict):
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=str(e)
         )
+
+@app.get("/ping")
+def keep_alive():
+    """Lightweight endpoint to keep Render from sleeping due to inactivity."""
+    return {"status": "alive", "service": "Scripter API"}

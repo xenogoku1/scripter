@@ -28,23 +28,26 @@ const handleLogin = async () => {
     // Store the access token in localStorage (or sessionStorage)
     if (response.data.access_token) {
       localStorage.setItem('access_token', response.data.access_token)
-    }
 
+    // Save user identifier (adjust based on what your backend returns in response.data)
+    const username = response.data.username || email.value.split('@')[0]
+    localStorage.setItem('scripter_username', username)
+  }
     // Redirects user to the dashboard
     router.push('/dashboard')
-  } catch (error) {
-    console.error("Login error:", error)
+} catch (error) {
+  console.error("Login error:", error)
 
-    // Human-friendly error parsing
-    const detail = error.response?.data?.detail
-    if (typeof detail === 'string') {
-      errorMessage.value = detail
-    } else {
-      errorMessage.value = "Invalid email or password. Please try again."
-    }
-  } finally {
-    isLoading.value = false
+  // Human-friendly error parsing
+  const detail = error.response?.data?.detail
+  if (typeof detail === 'string') {
+    errorMessage.value = detail
+  } else {
+    errorMessage.value = "Invalid email or password. Please try again."
   }
+} finally {
+  isLoading.value = false
+}
 }
 
 const handleGoogleLogin = async () => {

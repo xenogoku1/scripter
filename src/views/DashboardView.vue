@@ -2,6 +2,8 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useTheme } from '@/composables/useTheme'
+// Note: We don't strictly need the supabase client here anymore unless you use it elsewhere, 
+// but you can leave or remove the import as you prefer.
 import Navbar from '@/components/Navbar.vue'
 import TranscribeWorkspace from '@/components/TranscribeWorkspace.vue'
 import StudioWorkspace from '@/components/StudioWorkspace.vue'
@@ -10,13 +12,13 @@ import SettingsWorkspace from '@/components/SettingsWorkspace.vue'
 const { currentTheme } = useTheme()
 const activeTab = ref('transcribe')
 
-// User context (Connects to Supabase Auth state later)
-const user = ref({ name: 'Alex' })
+// Dynamic user state initialized with a clean fallback
+const user = ref({ name: 'User' })
 
 const router = useRouter()
 
 onMounted(() => {
-  // Supabase stores tokens in the URL hash after OAuth redirects
+  // 1. Handle Supabase OAuth tokens from the URL hash if present (for Google login)
   const hash = window.location.hash
   if (hash && hash.includes('access_token')) {
     const params = new URLSearchParams(hash.replace('#', '?'))
@@ -24,9 +26,16 @@ onMounted(() => {
     
     if (accessToken) {
       localStorage.setItem('access_token', accessToken)
+      localStorage.setItem('scripter_username', 'User') // Fallback for OAuth
       // Clean up the URL hash so it looks clean
       window.history.replaceState({}, document.title, window.location.pathname)
     }
+  }
+
+  // 2. Load the saved username from localStorage (saved during custom backend login)
+  const savedName = localStorage.getItem('scripter_username')
+  if (savedName) {
+    user.value = { name: savedName }
   }
 })
 </script>

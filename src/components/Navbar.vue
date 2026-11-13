@@ -23,8 +23,8 @@ const themes = [
 
 <template>
   <header class="w-full max-w-xl mx-auto z-50 px-2 pt-2">
-    <nav class="relative flex items-center justify-between bg-darkBgMid/80 backdrop-blur-xl border border-lightBlue/10 rounded-full px-3 py-2 shadow-2xl">
-      
+    <nav class="relative flex items-center justify-between bg-darkBgMid/85 backdrop-blur-xl border border-lightBlue/10 rounded-full px-3 py-2 shadow-2xl">
+
       <!-- Left: Logo & Branding -->
       <div class="flex items-center space-x-2 pl-1">
         <div class="w-7 h-7 rounded-full bg-neonLime/10 flex items-center justify-center border border-neonLime/30">
@@ -76,8 +76,13 @@ const themes = [
           class="p-2 rounded-full bg-darkBgEnd/80 border border-lightBlue/10 hover:border-neonLime/50 transition-all text-neonLime flex items-center justify-center"
           title="Switch Mood Theme"
         >
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"></path>
+          <!-- Modern Color Palette Icon -->
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="13.5" cy="6.5" r=".5" fill="currentColor"></circle>
+            <circle cx="17.5" cy="10.5" r=".5" fill="currentColor"></circle>
+            <circle cx="8.5" cy="7.5" r=".5" fill="currentColor"></circle>
+            <circle cx="6.5" cy="12.5" r=".5" fill="currentColor"></circle>
+            <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.504 5.555-5.555C21.965 6.48 17.485 2 12 2z"></path>
           </svg>
         </button>
 

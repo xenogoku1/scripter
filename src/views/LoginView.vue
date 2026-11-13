@@ -30,7 +30,7 @@ const handleLogin = async () => {
       localStorage.setItem('access_token', response.data.access_token)
     }
 
-    // Redirect user to the dashboard or home view (update route as needed)
+    // Redirects user to the dashboard
     router.push('/dashboard')
   } catch (error) {
     console.error("Login error:", error)

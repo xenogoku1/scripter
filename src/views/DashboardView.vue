@@ -1,5 +1,6 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { useTheme } from '@/composables/useTheme'
 import Navbar from '@/components/Navbar.vue'
 import TranscribeWorkspace from '@/components/TranscribeWorkspace.vue'
@@ -11,6 +12,23 @@ const activeTab = ref('transcribe')
 
 // User context (Connects to Supabase Auth state later)
 const user = ref({ name: 'Alex' })
+
+const router = useRouter()
+
+onMounted(() => {
+  // Supabase stores tokens in the URL hash after OAuth redirects
+  const hash = window.location.hash
+  if (hash && hash.includes('access_token')) {
+    const params = new URLSearchParams(hash.replace('#', '?'))
+    const accessToken = params.get('access_token')
+    
+    if (accessToken) {
+      localStorage.setItem('access_token', accessToken)
+      // Clean up the URL hash so it looks clean
+      window.history.replaceState({}, document.title, window.location.pathname)
+    }
+  }
+})
 </script>
 
 <template>
